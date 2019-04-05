@@ -59,7 +59,7 @@ parser.add_argument("--pretrained", default="", type=str, help="path to pretrain
 def main():
     
     global opt, model
-    opt = parser.parse_args()
+    opt, _ = parser.parse_known_args()
     print(opt)
 
     try:
