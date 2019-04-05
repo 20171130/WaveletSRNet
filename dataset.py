@@ -16,7 +16,7 @@ def readlinesFromFile(path, datasize):
     data=[]    
     for idx in xrange(0, datasize):
       line = f.readline()
-      data.append(line)      
+      data.append(line[0:-1])      
     
     f.close()  
     return data  

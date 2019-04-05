@@ -123,7 +123,7 @@ def main():
     optimizer_sr = optim.Adam(srnet.parameters(), lr=opt.lr, betas=(opt.momentum, 0.999), weight_decay=0.0005)
     
     #-----------------load dataset--------------------------
-    train_list, _ = loadFromFile(opt.trainfiles, opt.trainsize)    
+    train_list = readlinesFromFile(opt.trainfiles, opt.trainsize)    
     train_set = ImageDatasetFromFile(train_list, opt.dataroot, 
               input_height=opt.input_height, input_width=opt.input_width,
               output_height=opt.output_height, output_width=opt.output_width,
@@ -133,7 +133,7 @@ def main():
     train_data_loader = torch.utils.data.DataLoader(train_set, batch_size=opt.batchSize,
                                      shuffle=True, num_workers=int(opt.workers))
     
-    test_list, _ = loadFromFile(opt.testfiles, opt.testsize)
+    test_list = readlinesFromFile(opt.testfiles, opt.testsize)
     test_set = ImageDatasetFromFile(test_list, opt.testroot, 
                   input_height=opt.output_height, input_width=opt.output_width,
                   output_height=opt.output_height, output_width=opt.output_width,
@@ -151,7 +151,7 @@ def main():
     for epoch in range(opt.start_epoch, opt.nEpochs + 1):  
         if epoch%opt.save_iter == 0:
             save_checkpoint(srnet, epoch, 0, 'sr_')
-        
+            
         for iteration, batch in enumerate(train_data_loader, 0):
             #--------------test-------------
             if iteration % opt.test_iter is 0 and opt.test:
@@ -166,7 +166,7 @@ def main():
                     wavelets = forward_parallel(srnet, input, opt.ngpu)                    
                     prediction = wavelet_rec(wavelets)
                     mse = criterion_m(prediction, target)
-                    psnr = 10 * log10(1 / (mse.data[0]) )
+                    psnr = 10 * log10(1 / (mse.item()) )
                     avg_psnr += psnr
                                                     
                     save_images(prediction, "Epoch_{:03d}_Iter_{:06d}_{:02d}_o.jpg".format(epoch, iteration, titer), 
@@ -204,8 +204,8 @@ def main():
             optimizer_sr.step()
             
             info = "===> Epoch[{}]({}/{}): time: {:4.4f}:".format(epoch, iteration, len(train_data_loader), time.time()-start_time)
-            info += "Rec: {:.4f}, {:.4f}, {:.4f}, Texture: {:.4f}".format(loss_lr.data[0], loss_sr.data[0], 
-                                loss_img.data[0], loss_textures.data[0])            
+            info += "Rec: {:.4f}, {:.4f}, {:.4f}, Texture: {:.4f}".format(loss_lr.item(), loss_sr.item(), 
+                                loss_img.item(), loss_textures.item())            
                           
             print(info)
              

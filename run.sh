@@ -6,4 +6,5 @@
 #$ -S /bin/sh
 #
 
-CUDA_VISIBLE_DEVICES=1 python main.py --ngpu=1 --test --start_epoch=0  --test_iter=1000  --batchSize=64 --test_batchSize=32 --nrow=4  --upscale=3 --input_height=128 --output_height=128 --crop_height=128 --lr=2e-4  --nEpochs=500 --cuda
+ CUDA_VISIBLE_DEVICES=1 python main.py --ngpu=1 --test --start_epoch=10  --test_iter=10  --batchSize=64 --test_batchSize=32 --nrow=4  --upscale=3 --input_height=128 --output_height=128 --crop_height=128 --lr=2e-4  --nEpochs=500 --cuda  --dataroot lfw --testroot lfw --trainfiles ./lfw/train.list --testfiles ./lfw/test.list --trainsize 10000 --testsize 3000 --pretrained ./model/sr_model_epoch_20_iter_0.pth
+
